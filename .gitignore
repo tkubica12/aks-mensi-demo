@@ -1,0 +1,5 @@
+container/version1/pkg
+container/version1/src
+container/version2/pkg
+container/version2/src
+.secrets
