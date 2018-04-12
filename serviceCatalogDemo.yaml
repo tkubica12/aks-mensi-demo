@@ -4,8 +4,8 @@ metadata:
   name: my-mysqldb-instance
   namespace: default
 spec:
-  clusterServiceClassExternalName: azure-mysqldb
-  clusterServicePlanExternalName: basic50
+  clusterServiceClassExternalName: azure-sql
+  clusterServicePlanExternalName: basic
   parameters:
     location: westeurope
     resourceGroup: myservices

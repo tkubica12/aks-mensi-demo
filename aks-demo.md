@@ -106,24 +106,27 @@ az aks install-connector -g tomasaksdemo \
 helm repo add svc-cat https://svc-catalog-charts.storage.googleapis.com
 helm install svc-cat/catalog --name catalog --namespace services --set rbacEnable=false
 
+source ~/.secrets
+
 helm repo add azure https://kubernetescharts.blob.core.windows.net/azure
 helm install azure/open-service-broker-azure --name azurebroker --namespace services \
   --set azure.subscriptionId=$subscription \
   --set azure.tenantId=$tenant \
   --set azure.clientId=$principal \
   --set azure.clientSecret=$client_secret \
-  --set basicAuth.password=somePrettyGoodPassword \
-  --set encryptionKey=someRealyGoodKey
 
 svcat get brokers
 svcat sync broker osba
 svcat get classes
-svcat describe class -t azure-postgresqldb
+svcat describe class -t azure-postgresql
 svcat describe class -t azure-cosmos-mongo-db
-svcat describe class -t azure-mysqldb
-svcat describe class -t azure-sqldb
+svcat describe class -t azure-mysql
+svcat describe class -t azure-sql
 
 kubectl create -f serviceCatalogDemo.yaml
+
+az sql server list -g myservices
+
 kubectl exec env -- env | grep DB
 
 ## Helm + Service Catalog
