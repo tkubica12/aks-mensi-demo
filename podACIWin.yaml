@@ -9,4 +9,8 @@ spec:
     image: microsoft/iis:nanoserver
     ports:
     - containerPort: 80
-  nodeName: virtual-kubelet-myaciconnector-win
+    resources:
+      requests:
+        memory: 1G
+        cpu: 1
+  nodeName: virtual-kubelet-aci-win

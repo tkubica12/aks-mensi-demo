@@ -107,7 +107,7 @@ az aks install-connector -g tomasaksdemo \
     -n aks-demo \
     --os-type both \
     --connector-name aci \
-    --resource-group MC_tomasaksdemo_aks-demo_westeurope
+    --aci-resource-group MC_tomasaksdemo_aks-demo_westeurope
 
 kubectl get nodes
 
