@@ -163,6 +163,7 @@ runcmd:
   - runuser -l tomas -c 'cd /home/tomas && git clone https://github.com/tkubica12/aks-mensi-demo.git'
   - runuser -l tomas -c 'cp /home/tomas/aks-mensi-demo/keybindings.json /home/tomas/.config/Code/User/keybindings.json'
   - sed -i.bak '/fi/a \#xrdp multiple users configuration \n mate-session \n' /etc/xrdp/startwm.sh
+  - systemctl start xrdp
 
 
 

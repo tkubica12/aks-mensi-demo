@@ -14,3 +14,5 @@ spec:
         image: tomasacr.azurecr.io/mojeappka:1
         ports:
         - containerPort: 3000
+      nodeSelector:
+        agentpool: nodepool1

@@ -17,6 +17,8 @@ ssh tomas@tomasjumpserver.westeurope.cloudapp.azure.com
 
 
 ## AKS
+az login
+
 az aks create -n aks-demo \
     -g tomasaksdemo \
     --kubernetes-version 1.9.6 \
@@ -72,8 +74,12 @@ kubectl get pods -w
 
 ## Ingress
 helm init
-helm install --name ingress stable/nginx-ingress
-helm install stable/kube-lego --namespace kube-system --name kube-lego --set config.LEGO_EMAIL=tkubica@centrum.cz,config.LEGO_URL=https://acme-v01.api.letsencrypt.org/directory
+helm install --name ingress stable/nginx-ingress \
+    --set controller.nodeSelector="agentpool: nodepool1"
+
+helm install stable/kube-lego --namespace kube-system \
+    --name kube-lego \
+    --set config.LEGO_EMAIL=tkubica@centrum.cz,config.LEGO_URL=https://acme-v01.api.letsencrypt.org/directory
 
 kubectl get service -w
 export ingressIP=$(kubectl get service ingress-nginx-ingress-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
@@ -123,7 +129,7 @@ svcat describe class -t azure-cosmos-mongo-db
 svcat describe class -t azure-mysql
 svcat describe class -t azure-sql
 
-kubectl create -f serviceCatalogDemo.yaml
+kubectl apply -f serviceCatalogDemo.yaml
 
 az sql server list -g myservices
 
@@ -133,7 +139,8 @@ kubectl exec env -- env | grep DB
 
 helm repo add azure https://kubernetescharts.blob.core.windows.net/azure
 
-helm install azure/wordpress --name wp --set wordpressUsername=tomas \
+helm install azure/wordpress --name wp \
+    --set wordpressUsername=tomas \
     --set wordpressPassword=Azure12345678 \
     --set mysql.azure.location=westeurope 
 
