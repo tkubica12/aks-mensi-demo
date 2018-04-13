@@ -106,7 +106,8 @@ az container logs -n mssql -g tomasaksdemo
 az aks install-connector -g tomasaksdemo \
     -n aks-demo \
     --os-type both \
-    --connector-name myaciconnector
+    --connector-name aci \
+    --resource-group MC_tomasaksdemo_aks-demo_westeurope
 
 kubectl get nodes
 
