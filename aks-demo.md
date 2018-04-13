@@ -75,11 +75,12 @@ kubectl get pods -w
 ## Ingress
 helm init
 helm install --name ingress stable/nginx-ingress \
-    --set controller.nodeSelector="agentpool: nodepool1"
+    --set controller.nodeSelector.agentpool=nodepool1
 
 helm install stable/kube-lego --namespace kube-system \
     --name kube-lego \
-    --set config.LEGO_EMAIL=tkubica@centrum.cz,config.LEGO_URL=https://acme-v01.api.letsencrypt.org/directory
+    --set config.LEGO_EMAIL=tkubica@centrum.cz,config.LEGO_URL=https://acme-v01.api.letsencrypt.org/directory \
+    --set controller.nodeSelector.agentpool=nodepool1
 
 kubectl get service -w
 export ingressIP=$(kubectl get service ingress-nginx-ingress-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
@@ -107,10 +108,17 @@ az aks install-connector -g tomasaksdemo \
     --os-type both \
     --connector-name myaciconnector
 
+kubectl get nodes
+
+kubectl apply -f podACIWin.yaml
+kubectl get pods
+
 ## Service Catalog
 
 helm repo add svc-cat https://svc-catalog-charts.storage.googleapis.com
-helm install svc-cat/catalog --name catalog --namespace services --set rbacEnable=false
+helm install svc-cat/catalog --name catalog \
+    --namespace services \
+    --set rbacEnable=false,controller.nodeSelector.agentpool=nodepool1
 
 source ~/.secrets
 
@@ -120,6 +128,7 @@ helm install azure/open-service-broker-azure --name azurebroker --namespace serv
   --set azure.tenantId=$tenant \
   --set azure.clientId=$principal \
   --set azure.clientSecret=$client_secret \
+  --set controller.nodeSelector.agentpool=nodepool1
 
 svcat get brokers
 svcat sync broker osba
@@ -142,7 +151,8 @@ helm repo add azure https://kubernetescharts.blob.core.windows.net/azure
 helm install azure/wordpress --name wp \
     --set wordpressUsername=tomas \
     --set wordpressPassword=Azure12345678 \
-    --set mysql.azure.location=westeurope 
+    --set mysql.azure.location=westeurope \
+    --set controller.nodeSelector.agentpool=nodepool1
 
 echo http://$(kubectl get svc wp-wordpress -o jsonpath='{.status.loadBalancer.ingress[0].ip}')/admin
 
